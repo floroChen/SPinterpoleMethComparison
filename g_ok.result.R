@@ -1,13 +1,13 @@
-############ÆÕÍ¨¿ËÀï¸ñ·¨2  Êı¾İ¸ñÊ½ËµÃ÷######
-# df.spºÍTest.spdf£ºSpatial*DataFrame¶ÔÏó£¬Test.spdfÎª´ı¼ìÑéµãÊı¾İ£¬
-# dataframeÓĞn+5ÁĞÔªËØ£¬Ç°5ÁĞÎª'name','iii','lat','lon','hh'£¬
-# ÆäºóÎªÆøÏóÒªËØÖµ£¬Ë³ĞòÁ½ÕßÒ»Ò»¶ÔÓ¦
-# Spatial*¶ÔÏó²»ÔÊĞíÓĞÖØµşµÄ¿Õ¼äµã£¬Èô´æÔÚ±ØĞëÏÈĞĞÈ¥³ı
-# map.raster: Õ¤¸ñ»¯µÄµØÍ¼("RasterLayer"¶ÔÏó£©£¬¶ÔÓ¦df.spËùÑĞ¾¿ÇøÓò
-# beta£ºÏàËÆÀë¶ÈµÄÖµÏµÊıD±ÈÖØbeta£¬ĞÎÏµÊıS±ÈÖØ1-beta
-#·µ»ØÖµ£º³ÉÔ±Îªvar.predºÍvar.diff¡¢degAD.dfµÄÁĞ±í¶ÔÏó£¬
-#µÚÒ»¸öÎªn¸ö³ÉÔ±µÄvarÄâºÏÖµµÄÊı¾İ¿ò£¬µÚ¶ş¸öÎªÊµ²â-ÄâºÏÖµÖ®²îµÄÊı¾İ¿ò£¬
-#µÚÈı¸öÎªÏàËÆÀë¶È
+############æ™®é€šå…‹é‡Œæ ¼æ³•2  æ•°æ®æ ¼å¼è¯´æ˜######
+# df.spå’ŒTest.spdfï¼šSpatial*DataFrameå¯¹è±¡ï¼ŒTest.spdfä¸ºå¾…æ£€éªŒç‚¹æ•°æ®ï¼Œ
+# dataframeæœ‰n+5åˆ—å…ƒç´ ï¼Œå‰5åˆ—ä¸º'name','iii','lat','lon','hh'ï¼Œ
+# å…¶åä¸ºæ°”è±¡è¦ç´ å€¼ï¼Œé¡ºåºä¸¤è€…ä¸€ä¸€å¯¹åº”
+# Spatial*å¯¹è±¡ä¸å…è®¸æœ‰é‡å çš„ç©ºé—´ç‚¹ï¼Œè‹¥å­˜åœ¨å¿…é¡»å…ˆè¡Œå»é™¤
+# map.raster: æ …æ ¼åŒ–çš„åœ°å›¾("RasterLayer"å¯¹è±¡ï¼‰ï¼Œå¯¹åº”df.spæ‰€ç ”ç©¶åŒºåŸŸ
+# betaï¼šç›¸ä¼¼ç¦»åº¦çš„å€¼ç³»æ•°Dæ¯”é‡betaï¼Œå½¢ç³»æ•°Sæ¯”é‡1-beta
+#è¿”å›å€¼ï¼šæˆå‘˜ä¸ºvar.predå’Œvar.diffã€degAD.dfçš„åˆ—è¡¨å¯¹è±¡ï¼Œ
+#ç¬¬ä¸€ä¸ªä¸ºnä¸ªæˆå‘˜çš„varæ‹Ÿåˆå€¼çš„æ•°æ®æ¡†ï¼Œç¬¬äºŒä¸ªä¸ºå®æµ‹-æ‹Ÿåˆå€¼ä¹‹å·®çš„æ•°æ®æ¡†ï¼Œ
+#ç¬¬ä¸‰ä¸ªä¸ºç›¸ä¼¼ç¦»åº¦
 ##################
 g_ok.result<-function(map.raster, Test.spdf, df.sp, n, beta=0.5){    
     var.pred<-NULL
@@ -18,10 +18,10 @@ g_ok.result<-function(map.raster, Test.spdf, df.sp, n, beta=0.5){
         colnames(dfx@data)<- "x"
         vgmodel<-autofitVariogram(formula=var.formula, input_data=dfx, model = c("Sph", "Exp", "Gau", "Log", "Ste", "Wav"))
         vgmodel<-vgmodel$var_model
-        #¿ËÀï¸ñÄÚ²å
+        #å…‹é‡Œæ ¼å†…æ’
         g_ok<-gstat(formula=var.formula, data=dfx, model=vgmodel) %>%
-           interpolate(map.raster, . ) %>%
-           mask(. , Test.spdf) %>%  #ÑÚÄ¤ÌáÈ¡
+           raster::interpolate(map.raster, . ) %>%
+           mask(. , Test.spdf) %>%  #æ©è†œæå–
            rasterToPoints(. , spatial=T)    
         var.pred<-cbind(var.pred, g_ok@data$var1.pred)
         degAD.df<-cbind(degAD.df, degAD2(Test.spdf@data[,i+5], var.pred[,i], beta) )
